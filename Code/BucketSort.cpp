@@ -16,7 +16,6 @@ class node{
   public:
     float data;
     node *next,*prev;
-
     node(float data,node *next = NULL,node *prev = NULL){
       this->data = data;
       this->next = next;
@@ -26,10 +25,9 @@ class node{
 
 /*Linked List :- Main Class*/
 class LL{
-  private:
+  public:
     node *head;
     node *tail;
-  public:
     void insert(float ele);
     void printList();
 };
@@ -76,6 +74,9 @@ void mergeList(LL* list){
       p = p->next;
     }
     i++;
+  }
+  for(int i = 0; i < size; i++){
+    std::cout << "Element:" << i+1 << "--> " << arrFinal[i] << '\n';
   }
   display(arrFinal,size);
 }
