@@ -8,9 +8,12 @@ using namespace std;
 
 void makeMinArray(int*);
 void printArray(int*);
+void printArrayMain(int*);
+void printTree(int*);
 
 void heapSort(int*,int);
-void maxHeapify(int*,int,int);
+void minHeapify(int*,int,int);
+int calMinimum(int*);
 
 int main() {
   srand(time(NULL));
@@ -20,15 +23,33 @@ int main() {
     a[i] = k;
   }
   std::cout << "Original Array..." << '\n';
-  printArray(a);
+  printArrayMain(a);
   makeMinArray(a);
-  std::cout << "Modified Array..." << '\n';
-  printArray(a);
+  // std::cout << "Modified Array..." << '\n';
+  // printArray(a);
   heapSort(a,newSize);
-  std::cout << "Sorted Array..." << '\n';
-  printArray(a);
-
+  // std::cout << "Heap..." << '\n';
+  // printArray(a);
+  int secondMinimum = calMinimum(a);
+  cout << "\nSecond minimum element of the array is : " << secondMinimum;
   return 0;
+}
+
+void printTree(int*){
+  
+}
+
+int calMinimum(int *a){
+  int i = 3;
+  while(a[i] == a[0] && a[i+1] == a[0]){
+    i = i + 2;
+  }
+  
+  if(a[i] < a[i+1]){
+    return a[i];
+  }else{
+    return a[i+1];
+  }
 }
 
 void makeMinArray(int *a){
@@ -42,30 +63,33 @@ void makeMinArray(int *a){
 
 void heapSort(int *arr, int n){
     for(int i = (n/2) - 1; i >= 0; i--){
-        maxHeapify(arr,n,i);
-    }
-    for(int i = n-1; i >= 0; i--){
-        swap(arr[0],arr[i]);
-        maxHeapify(arr,i,0);
+        minHeapify(arr,n,i);
     }
 }
 
-void maxHeapify(int *a, int n, int k){
+void minHeapify(int *a, int n, int k){
     int l = 2*k + 1;
     int r = 2*k + 2;
-    int large = k;
+    int small = k;
 
-    if(l<n && a[l]>a[large])large=l;
-    if(r<n && a[r]>a[large])large=r;
+    if(l<n && a[l]<a[small])small=l;
+    if(r<n && a[r]<a[small])small=r;
 
-    if(large != k){
-        swap(a[k],a[large]);
-        maxHeapify(a,n,large);
+    if(small != k){
+        swap(a[k],a[small]);
+        minHeapify(a,n,small);
     }
 }
 
 void printArray(int *a){
   for(int i = 0; i <= newSize; i++){
+    std::cout << "["<< i << "] -> " << a[i] << '\n';
+  }
+  std::cout << "" << '\n';
+}
+
+void printArrayMain(int *a){
+  for(int i = newSize; i >= size; i--){
     std::cout << "["<< i << "] -> " << a[i] << '\n';
   }
   std::cout << "" << '\n';
