@@ -23,16 +23,19 @@ public:
 class rbTree{
 	private:
 		node* root;
-		node* nullLeaves;
-		void print(node*, int);
+		//node* nullLeaves;
+		void print(node*,int);
+		node* insertBst(int);
+		void leftRotate(node*);
+		void rightRotate(node*);
 	public:
 		rbTree(){
 			root = NULL;
 		}
-		node* insertBst(int);
 		void insert(int);
-		void leftRotate(node*);
-		void rightRotate(node*);
+		void bstDelete(node*,int);
+		void rbDelete(node*,int);
+		void rbDelete(int);
 		void print();
 };
 
@@ -146,7 +149,57 @@ void rbTree::insert(int ele){
 			}
 		}
 	}
+
 	root->ownColor = BLACK;
+}
+
+void rbTree::bstDelete(node* root, int ele){
+	node* p = root;
+	while (p != NULL && p->data != ele) {
+		if(ele > p->data)
+			p = p->rchild;
+		else
+			p = p->lchild;
+	}
+	if(p == NULL){
+		std::cout << "!!!!!! ELEMENT NOT FOUND !!!!!!\n" << '\n';
+		return;
+	}else if (p->lchild == NULL && p->rchild == NULL) {
+		if(p->parent->lchild == p)
+			p->parent->lchild = NULL;
+		else
+			p->parent->rchild = NULL;
+	}else if(p->lchild == NULL){
+		if(p->parent->lchild == p)
+			p->parent->lchild = p->rchild;
+		else
+			p->parent->rchild = p->rchild;
+	}else if(p->rchild == NULL){
+		if(p->parent->lchild == p)
+			p->parent->lchild = p->lchild;
+		else
+			p->parent->rchild = p->lchild;
+	}else{
+		//std::cout << " IN LAST ELSE --- " << p->data << '\n';
+		node* q = p->rchild;
+		while (q->lchild != NULL) {
+			q = q->lchild;
+		}
+		std::cout << "Q->DATA :- " << q->data << '\n';
+		p->data = q->data;
+		q->parent->rchild = NULL;
+		delete q;
+		return;
+	}
+	delete p;
+}
+
+void rbTree::rbDelete(node* root, int ele){
+	bstDelete(root,ele);
+}
+
+void rbTree::rbDelete(int ele){
+	rbDelete(root,ele);
 }
 
 void rbTree::print(node *root, int space){
@@ -176,7 +229,8 @@ int main(){
   while (1) {
     cout << "\n\n!!! WELOCOME TO RED - BLACK TREE !!!!" << '\n';
     cout<<"1. Add new Node"<<endl;
-    cout<<"2. Print Tree"<<endl;
+		cout<<"2. Delete Node"<<endl;
+    cout<<"3. Print Tree"<<endl;
     cout<<"0. Exit"<<endl;
     cout<<"Choice: ";
     cin>>choice;
@@ -184,13 +238,20 @@ int main(){
 
     switch(choice){
         case 1:{
-          cout<<"Enter Element: ";
+          cout<<"Enter Element : ";
           cin>>temp;
           tree.insert(temp);
         }
         break;
 
-        case 2:{
+				case 2:{
+          cout<<"Enter element to be Deleted : ";
+          cin>>temp;
+          tree.rbDelete(temp);
+        }
+        break;
+
+        case 3:{
         	tree.print();
         }
         break;
