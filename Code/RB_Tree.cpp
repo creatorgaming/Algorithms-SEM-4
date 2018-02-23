@@ -28,8 +28,6 @@ class rbTree{
 	public:
 		rbTree(){
 			root = NULL;
-			// nullLeaves = new node(0);
-			// nullLeaves->ownColor = BLACK;
 		}
 		node* insertBst(int);
 		void insert(int);
@@ -44,13 +42,11 @@ node* rbTree::insertBst(int ele){
 		root = q;
 		root->ownColor = BLACK;
 		q->parent = NULL;
-		// q->lchild = nullLeaves;
-		// q->rchild = nullLeaves;
 		return q;
 	}
 	node* p = root;
 	node* fp = 0;
-	while(p != NULL){ // || p != nullLeaves){
+	while(p != NULL){
 		fp = p;
 		if(ele < p->data)
 			p = p->lchild;
@@ -63,16 +59,13 @@ node* rbTree::insertBst(int ele){
 		fp->rchild = q;
 
 	q->parent = fp;
-	// q->lchild = nullLeaves;
-    // q->rchild = nullLeaves;
-
 	return q;
 }
 
 void rbTree::leftRotate(node* x){
 	node *x_right = x->rchild;
 	x->rchild = x_right->lchild;
-	
+
 	if (x->rchild != NULL)
 		x->rchild->parent = x;
 
@@ -92,7 +85,7 @@ void rbTree::leftRotate(node* x){
 void rbTree::rightRotate(node* x){
 	node *x_left = x->lchild;
 	x->lchild = x_left->lchild;
-	
+
 	if (x->lchild != NULL)
 		x->lchild->parent = x;
 
@@ -119,7 +112,6 @@ void rbTree::insert(int ele){
 	// 	cout << "\nELEMENT PARENT color : " << p->parent->ownColor;
 	// }
 	while(x != root && x->parent->ownColor == RED){
-
 		if (x->parent == x->parent->parent->lchild){
 			uncle = x->parent->parent->rchild;
 			if (uncle != NULL && uncle->ownColor == RED){
@@ -129,7 +121,7 @@ void rbTree::insert(int ele){
 				x = x->parent->parent;
 			}else{
 				if(x == x->parent->rchild){
-					x = x->parent;
+  					x = x->parent;
 					leftRotate(x);
 				}
 				x->parent->ownColor = BLACK;
@@ -154,6 +146,7 @@ void rbTree::insert(int ele){
 			}
 		}
 	}
+	root->ownColor = BLACK;
 }
 
 void rbTree::print(node *root, int space){
@@ -162,16 +155,15 @@ void rbTree::print(node *root, int space){
     space += COUNT;
     print(root->rchild, space);
     cout << endl;
-    
+
     for(int i = COUNT; i < space; i++){
         cout << " ";
     }
 
-    // if (root != nullLeaves)
-    	cout<< root->data << " " << root->ownColor << '\n';
+    cout<< root->data << " " << root->ownColor << '\n';
     print(root->lchild, space);
 }
- 
+
 void rbTree::print(){
    print(root, 0);
 }
