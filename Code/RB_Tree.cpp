@@ -28,6 +28,7 @@ class rbTree{
 		node* insertBst(int);
 		void leftRotate(node*);
 		void rightRotate(node*);
+		void deleteFixUp(node*);
 	public:
 		rbTree(){
 			root = NULL;
@@ -38,32 +39,6 @@ class rbTree{
 		void rbDelete(int);
 		void print();
 };
-
-node* rbTree::insertBst(int ele){
-	node* q = new node(ele);
-	if(root == NULL){
-		root = q;
-		root->ownColor = BLACK;
-		q->parent = NULL;
-		return q;
-	}
-	node* p = root;
-	node* fp = 0;
-	while(p != NULL){
-		fp = p;
-		if(ele < p->data)
-			p = p->lchild;
-		else
-			p = p->rchild;
-	}
-	if(fp->data > ele)
-		fp->lchild = q;
-	else
-		fp->rchild = q;
-
-	q->parent = fp;
-	return q;
-}
 
 void rbTree::leftRotate(node* x){
 	node *x_right = x->rchild;
@@ -105,6 +80,32 @@ void rbTree::rightRotate(node* x){
 	x->parent = x_left;
 }
 
+node* rbTree::insertBst(int ele){
+	node* q = new node(ele);
+	if(root == NULL){
+		root = q;
+		root->ownColor = BLACK;
+		q->parent = NULL;
+		return q;
+	}
+	node* p = root;
+	node* fp = 0;
+	while(p != NULL){
+		fp = p;
+		if(ele < p->data)
+			p = p->lchild;
+		else
+			p = p->rchild;
+	}
+	if(fp->data > ele)
+		fp->lchild = q;
+	else
+		fp->rchild = q;
+
+	q->parent = fp;
+	return q;
+}
+
 void rbTree::insert(int ele){
 	node *x = insertBst(ele);
 	node *uncle = NULL;
@@ -124,7 +125,7 @@ void rbTree::insert(int ele){
 				x = x->parent->parent;
 			}else{
 				if(x == x->parent->rchild){
-  					x = x->parent;
+	  					x = x->parent;
 					leftRotate(x);
 				}
 				x->parent->ownColor = BLACK;
@@ -153,8 +154,59 @@ void rbTree::insert(int ele){
 	root->ownColor = BLACK;
 }
 
+void rbTree::deleteFixUp(node* fixUpNode){
+	if(fixUpNode){
+		if(fixUpNode->ownColor == RED)
+			fixUpNode->ownColor = BLACK;
+		else{
+			node* sibling;
+
+			if (fixUpNode == fixUpNode->parent->lchild)
+				sibling = fixUpNode->parent->rchild;
+			else 
+				sibling = fixUpNode->parent->lchild;
+
+			if (sibling->ownColor == RED){
+				sibling->ownColor = BLACK;
+				sibling->parent->ownColor = RED;
+				if (sibling == sibling->parent->lchild)
+					rightRotate(sibling->parent);
+				else 
+					leftRotate(sibling->parent);
+			}else{
+				if (sibling->lchild != NULL && sibling->lchild->ownColor == RED){
+					sibling->lchild->ownColor = BLACK;
+					if (sibling==sibling->parent->lchild)
+						rightRotate(sibling->parent);
+					else{
+						rightRotate(sibling);
+						leftRotate(sibling->lchild->parent);
+					}
+				}else if(sibling->rchild != NULL && sibling->rchild->ownColor == RED){
+					sibling->rchild->ownColor = BLACK;
+					if (sibling==sibling->parent->rchild)
+						leftRotate(sibling->parent);
+					else {
+						leftRotate(sibling);
+						rightRotate(sibling->rchild->parent);
+					}
+				}else{
+					if(sibling->parent->ownColor == RED){
+						sibling->parent->ownColor = BLACK;
+						sibling->ownColor = RED;
+					}else{
+						sibling->ownColor = RED;
+						deleteFixUp(sibling->parent);
+					}
+				}
+			}
+		}
+	}
+}
+
 void rbTree::bstDelete(node* root, int ele){
 	node* p = root;
+	node* fixUpNode = NULL;
 	while (p != NULL && p->data != ele) {
 		if(ele > p->data)
 			p = p->rchild;
@@ -169,29 +221,65 @@ void rbTree::bstDelete(node* root, int ele){
 			p->parent->lchild = NULL;
 		else
 			p->parent->rchild = NULL;
+		
+		if (p->ownColor == BLACK){
+			fixUpNode = p->parent;
+		}
+		delete p;
 	}else if(p->lchild == NULL){
 		if(p->parent->lchild == p)
 			p->parent->lchild = p->rchild;
 		else
 			p->parent->rchild = p->rchild;
+		p->rchild->parent = p->parent;
+		if (p->ownColor == BLACK){
+			fixUpNode = p->rchild;
+		}
+		delete p;
 	}else if(p->rchild == NULL){
 		if(p->parent->lchild == p)
 			p->parent->lchild = p->lchild;
 		else
 			p->parent->rchild = p->lchild;
-	}else{
+		p->lchild->parent = p->parent;\
+		if (p->ownColor == BLACK){
+			fixUpNode = p->lchild;
+		}
+		delete p;
+	}else {
 		//std::cout << " IN LAST ELSE --- " << p->data << '\n';
 		node* q = p->rchild;
 		while (q->lchild != NULL) {
 			q = q->lchild;
 		}
-		std::cout << "Q->DATA :- " << q->data << '\n';
+		// std::cout << "Q->DATA :- " << q->data << '\n';
 		p->data = q->data;
-		q->parent->rchild = NULL;
+		if (q == p->rchild and q->rchild == NULL) {
+			p->rchild = NULL;
+			if (q->ownColor == BLACK){
+				fixUpNode = p;
+			}
+		}else if (q == p->rchild and q->rchild != NULL) {
+			q->rchild->parent = p;
+			p->rchild = q->rchild;
+			if (q->ownColor == BLACK){
+				fixUpNode = q->rchild;
+			}
+		}else if (q != p->rchild and q->rchild == NULL) {
+			q->parent->lchild = NULL;
+			if (q->ownColor == BLACK){
+				fixUpNode = q->parent;
+			}
+		}else if (q != p->rchild and q->rchild != NULL) {
+			q->rchild->parent = q->parent;
+			q->parent->lchild = q->rchild;
+			if (q->ownColor == BLACK){
+				fixUpNode = q->rchild;
+			}
+		}
 		delete q;
-		return;
 	}
-	delete p;
+	deleteFixUp(fixUpNode);
 }
 
 void rbTree::rbDelete(node* root, int ele){
