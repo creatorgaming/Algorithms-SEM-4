@@ -26,6 +26,13 @@ public:
       tail = elementInserted;
     }
   }
+  void listDisplay(){
+    node* p = head;
+    while(p != NULL){
+      cout << p->data << "-> ";
+      p = p->next;
+    }
+  }
 };
 
 /* Queue */
@@ -53,6 +60,14 @@ public:
       delete deletedNode;
     }
     return temp;
+  }
+
+  void queueDisplay(){
+    node* p = head;
+    while(p != NULL){
+      cout << p->data << "-> ";
+      p = p->next;
+    }
   }
 };
 
@@ -94,8 +109,9 @@ public:
           if(array[temp->data] == 0){
             cout << temp->data << " ";
           }
+          
           node *visit = graphList[temp->data].head;
-          while(!array[temp->data] && visit){
+          while(!array[temp->data] and visit){
             array[temp->data] = 1;
             if(!array[visit->data]){
               queue.enQueue(visit->data);
