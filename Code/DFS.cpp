@@ -138,10 +138,10 @@ public:
 
 int main() {
   int noOfVertices = 5;
-  // cout << "Enter the no of vertices in Graph : ";
-  // cin >> noOfVertices;
+  cout << "Enter the no of vertices in Graph : ";
+  cin >> noOfVertices;
   graph g(noOfVertices);
-
+/*
   // HardCoded Data
   g.addEdge(0, 1);
   g.addEdge(0, 3);
@@ -150,36 +150,36 @@ int main() {
   g.addEdge(0, 2);
   g.addEdge(2, 4);
   g.dfsTraverse(0);
-  
-  // system("cls");
-  // while(1){
-  //   char choice;
-  //   cout << "\n\n !!!! DFS GRAPH TRAVERSAL !!!! \n\n";
-  //   cout << "1. Add Edge\n";
-  //   cout << "2. DFS Traversal\n";
-  //   cout << "0. EXIT\n";
-  //   cout << "Choice --> ";
-  //   cin >> choice;
-  //   cout << '\n';
-  //   switch(choice){
-  //     case '1':
-  //       int src, dest; 
-  //       cout << "Enter source node: ";
-  //       cin >> src;
-  //       cout << "Enter destination node: ";
-  //       cin >> dest;
-  //       g.addEdge(src,dest);
-  //       break;
+*/  
+  system("cls");
+  while(1){
+    char choice;
+    cout << "\n\n !!!! DFS GRAPH TRAVERSAL !!!! \n\n";
+    cout << "1. Add Edge\n";
+    cout << "2. DFS Traversal\n";
+    cout << "0. EXIT\n";
+    cout << "Choice --> ";
+    cin >> choice;
+    cout << '\n';
+    switch(choice){
+      case '1':
+        int src, dest; 
+        cout << "Enter source node: ";
+        cin >> src;
+        cout << "Enter destination node: ";
+        cin >> dest;
+        g.addEdge(src,dest);
+        break;
 
-  //     case '2':
-  //       g.dfsTraverse();
+      case '2':
+        g.dfsTraverse();
 
-  //     case '0':
-  //       exit(0);
+      case '0':
+        exit(0);
 
-  //     default:
-  //       cout << "\n !!! Wrong choice !!! \n";
-  //   }
-  // }
+      default:
+        cout << "\n !!! Wrong choice !!! \n";
+    }
+  }
   return 0;
 }
