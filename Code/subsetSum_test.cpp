@@ -27,10 +27,13 @@ int main(){
     cin>>n;
     arr=new int[n];
     cout<<"Enter Set\n";
-    for(int i = 0;i<n;i++)cin>>arr[i];
+    for(int i = 0;i<n;i++)
+        cin>>arr[i];
     cout<<"Enter sum value : ";
     cin>>sum;
 
-    if(subsetSum(arr,n,sum))cout<<"Subset with given sum found\n";
-    else cout<<"Subset with given sum not found\n";
+    if(subsetSum(arr,n,sum))
+        cout<<"Subset with given sum found\n";
+    else 
+        cout<<"Subset with given sum not found\n";
 }
