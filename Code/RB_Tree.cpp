@@ -3,7 +3,7 @@
 using namespace std;
 int COUNT = 10; //To Print Tree
 enum color{
-		RED,BLACK
+	RED,BLACK
 };
 
 class node{
@@ -125,7 +125,7 @@ void rbTree::insert(int ele){
 				x = x->parent->parent;
 			}else{
 				if(x == x->parent->rchild){
-	  					x = x->parent;
+	  				x = x->parent;
 					leftRotate(x);
 				}
 				x->parent->ownColor = BLACK;
